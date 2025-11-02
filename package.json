@@ -1,0 +1,31 @@
+{
+  "name": "town-bakery",
+  "description": "Town Bakery - مخبز تاون",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "download-assets": "node scripts/download-assets.js",
+    "extract-color": "node scripts/extract-color.js",
+    "setup": "npm run download-assets && npm run extract-color"
+  },
+  "dependencies": {
+    "framer-motion": "^10.16.16",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2"
+  }
+}
