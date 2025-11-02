@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+
+# Host
+Host: https://town-bakery.vercel.app
+
+# Sitemaps
+Sitemap: https://town-bakery.vercel.app/sitemap.xml

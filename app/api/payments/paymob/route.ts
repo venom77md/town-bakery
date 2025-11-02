@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     console.error('خطأ في عملية الدفع:', error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'بيانات غير صحيحة', details: error.errors },
+        { error: 'بيانات غير صحيحة', details: error.issues },
         { status: 400 }
       );
     }

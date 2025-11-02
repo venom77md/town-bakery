@@ -15,11 +15,17 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx scripts/seed-products.ts",
     "prisma:studio": "prisma studio",
-    "db:setup": "npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed"
+    "db:setup": "npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed",
+    "postbuild": "next-sitemap",
+    "deploy": "vercel --prod",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.18.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.78.0",
     "axios": "^1.13.1",
     "cross-env": "^10.1.0",
@@ -40,6 +46,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.16",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5",
     "tsx": "^4.20.6",

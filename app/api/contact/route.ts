@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     console.error('خطأ في إرسال الرسالة:', error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { success: false, error: 'بيانات غير صحيحة', details: error.errors },
+        { success: false, error: 'بيانات غير صحيحة', details: error.issues },
         { status: 400 }
       );
     }

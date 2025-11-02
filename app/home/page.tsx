@@ -8,11 +8,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-export const metadata = {
-  title: 'الرئيسية - Town Bakery',
-  description: 'خبز طازج يومياً ومخبوزات عالية الجودة',
-};
-
 const testimonials = [
   {
     id: 1,
