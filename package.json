@@ -21,6 +21,7 @@
     "db:setup-sql": "node scripts/setup-local-db.js",
     "db:auto-fix": "node db-auto-fix.js",
     "test:paymob": "tsx scripts/test-paymob.ts",
+    "prebuild": "prisma generate && prisma migrate deploy",
     "postbuild": "next-sitemap",
     "deploy": "vercel --prod",
     "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",

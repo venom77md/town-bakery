@@ -64,8 +64,8 @@ export default function OrdersPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <div>
-        <div className="flex justify-between items-center mb-8">
+    <div>
+      <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-bold text-brown">الطلبات</h2>
         <div className="flex gap-2">
           {(['all', 'new', 'preparing', 'delivered'] as const).map((f) => (
@@ -139,7 +139,7 @@ export default function OrdersPage() {
           لا توجد طلبات
         </div>
       )}
-      </div>
+    </div>
     </LazyMotion>
   );
 }
