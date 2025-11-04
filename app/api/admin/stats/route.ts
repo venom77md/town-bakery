@@ -27,7 +27,7 @@ export async function GET() {
       select: { total: true },
     });
 
-    const totalRevenue = completedOrders.reduce((sum, order) => sum + order.total, 0);
+    const totalRevenue = completedOrders.reduce((sum: number, order: { total: number }) => sum + order.total, 0);
 
     return NextResponse.json({
       totalOrders,

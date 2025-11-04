@@ -15,7 +15,7 @@ export default async function HomePage() {
   });
 
   // Transform products for client component with dynamic images
-  const featuredProducts = products.map((p, index) => ({
+  const featuredProducts = products.map((p: typeof products[0], index: number) => ({
     id: p.id,
     name: p.name,
     name_ar: p.name_ar || p.name,

@@ -39,7 +39,7 @@ export default async function ProductsPage() {
   });
 
   // Transform products for client component with dynamic images
-  const productsData = products.map((p, index) => ({
+  const productsData = products.map((p: typeof products[0], index: number) => ({
     id: p.id,
     name: p.name,
     name_ar: p.name_ar || p.name,
@@ -58,7 +58,7 @@ export default async function ProductsPage() {
     ingredients: p.ingredients ? JSON.parse(p.ingredients) : [],
   }));
 
-  const categoriesData = ['الكل', ...categories.map((c) => c.name_ar || c.name)];
+  const categoriesData = ['الكل', ...categories.map((c: typeof categories[0]) => c.name_ar || c.name)];
 
   return <ProductsClient products={productsData} categories={categoriesData} />;
 }

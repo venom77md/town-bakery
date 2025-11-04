@@ -43,7 +43,7 @@ export default async function LandingPage() {
   });
 
   // Transform products with dynamic images
-  const featuredProducts = products.map((p, index) => ({
+  const featuredProducts = products.map((p: typeof products[0], index: number) => ({
     id: p.id,
     name_ar: p.name_ar || p.name,
     name_en: p.name_en || p.name,

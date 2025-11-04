@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 import Link from 'next/link';
 
 interface Order {
@@ -63,8 +63,9 @@ export default function OrdersPage() {
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
+    <LazyMotion features={domAnimation}>
+      <div>
+        <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-bold text-brown">الطلبات</h2>
         <div className="flex gap-2">
           {(['all', 'new', 'preparing', 'delivered'] as const).map((f) => (
@@ -138,7 +139,8 @@ export default function OrdersPage() {
           لا توجد طلبات
         </div>
       )}
-    </div>
+      </div>
+    </LazyMotion>
   );
 }
 
