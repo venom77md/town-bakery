@@ -91,7 +91,11 @@ async function main() {
       await prisma.product.upsert({
         where: { slug: product.slug },
         update: {},
-        create: product,
+        create: {
+          ...product,
+          name: product.name_en, // Required field
+          description: product.description_en, // Required field
+        },
       });
       console.log(`✅ تم إضافة: ${product.name_ar}`);
     } catch (error: any) {

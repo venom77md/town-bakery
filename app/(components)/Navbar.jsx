@@ -60,10 +60,11 @@ export default function Navbar() {
             <Link 
               href="/cart" 
               className="relative bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
+              aria-label={`السلة - ${cartCount > 0 ? `${cartCount} منتج` : 'فارغة'}`}
             >
               السلة
               {cartCount > 0 && (
-                <span className="absolute -top-2 -left-2 bg-brown text-cream rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                <span className="absolute -top-2 -left-2 bg-brown text-cream rounded-full w-6 h-6 flex items-center justify-center text-xs" aria-label={`عدد المنتجات: ${cartCount}`}>
                   {cartCount}
                 </span>
               )}
@@ -71,12 +72,12 @@ export default function Navbar() {
           </div>
 
           <div className="md:hidden flex items-center space-x-4 space-x-reverse">
-            <Link href="/cart" className="relative">
-              <svg className="w-6 h-6 text-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href="/cart" className="relative" aria-label={`السلة - ${cartCount > 0 ? `${cartCount} منتج` : 'فارغة'}`}>
+              <svg className="w-6 h-6 text-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs" aria-label={`عدد المنتجات في السلة: ${cartCount}`}>
                   {cartCount}
                 </span>
               )}
@@ -84,7 +85,9 @@ export default function Navbar() {
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-brown hover:text-primary"
-              aria-label="قائمة"
+              aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (
@@ -98,7 +101,7 @@ export default function Navbar() {
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden pb-4 space-y-2">
+          <div id="mobile-menu" className="md:hidden pb-4 space-y-2" role="menu">
             <Link 
               href="/home" 
               className="block text-brown hover:text-primary font-medium py-2"

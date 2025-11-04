@@ -1,5 +1,5 @@
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
+export default {
   siteUrl: process.env.SITE_URL || 'https://town-bakery.vercel.app',
   generateRobotsTxt: true,
   generateIndexSitemap: false,

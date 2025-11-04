@@ -9,7 +9,10 @@ export async function GET() {
     });
     return NextResponse.json(products);
   } catch (error: any) {
-    console.error('خطأ في جلب المنتجات:', error);
+    // Log only in development, fallback to local data if DB not configured
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في جلب المنتجات:', error);
+    }
     // Fallback to local data if DB not configured
     try {
       const { products } = await import('@/lib/products');

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const contact = await prisma.contact.create({
       data: {
         name: validatedData.name,
-        email: validatedData.email,
+        email: validatedData.email || '',
         message: validatedData.message,
       },
     });
@@ -31,7 +31,9 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('خطأ في إرسال الرسالة:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في إرسال الرسالة:', error);
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, error: 'بيانات غير صحيحة', details: error.issues },

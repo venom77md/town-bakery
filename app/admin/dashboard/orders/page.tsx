@@ -29,7 +29,10 @@ export default function OrdersPage() {
       const data = await response.json();
       setOrders(data);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      // Log only in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching orders:', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -44,7 +47,10 @@ export default function OrdersPage() {
       });
       fetchOrders();
     } catch (error) {
-      console.error('Error updating order:', error);
+      // Log only in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error updating order:', error);
+      }
     }
   };
 
@@ -79,7 +85,7 @@ export default function OrdersPage() {
 
       <div className="grid gap-4">
         {filteredOrders.map((order, index) => (
-          <motion.div
+          <m.div
             key={order.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -123,7 +129,7 @@ export default function OrdersPage() {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
 

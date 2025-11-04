@@ -1,10 +1,20 @@
 import { NextResponse } from 'next/server';
-import { authenticatePaymob, createPaymobOrder, createPaymentKey } from '@/lib/paymob';
+import { initiatePaymobPayment } from '@/lib/paymob';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
-const paymentRequestSchema = z.object({
-  orderId: z.string(),
+// Support both formats: new simplified format and legacy format
+const simplifiedPaymentSchema = z.object({
+  orderId: z.union([z.string(), z.number()]).optional(),
+  amount: z.number(),
+  name: z.string(),
+  phone: z.string(),
+  address: z.string(),
+});
+
+const legacyPaymentSchema = z.object({
+  orderId: z.union([z.string(), z.number()]),
+  amount: z.number().optional(),
   customerInfo: z.object({
     first_name: z.string(),
     last_name: z.string(),
@@ -17,71 +27,105 @@ const paymentRequestSchema = z.object({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { orderId, customerInfo } = paymentRequestSchema.parse(body);
+    
+    let orderId: number | null = null;
+    let amount: number;
+    let customerInfo: {
+      first_name: string;
+      last_name: string;
+      phone_number: string;
+      email?: string;
+    };
+    let currency = 'EGP';
 
-    // Fetch order from database
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
-    });
+    // Try simplified format first
+    try {
+      const simplified = simplifiedPaymentSchema.parse(body);
+      // Parse name into first and last name
+      const nameParts = simplified.name.trim().split(' ');
+      customerInfo = {
+        first_name: nameParts[0] || simplified.name,
+        last_name: nameParts.slice(1).join(' ') || '',
+        phone_number: simplified.phone.replace(/[^0-9]/g, ''),
+        email: '',
+      };
+      amount = simplified.amount;
+      
+      // If orderId is provided, fetch order to get currency and update it
+      if (simplified.orderId) {
+        const numericOrderId = typeof simplified.orderId === 'string' ? parseInt(simplified.orderId) : simplified.orderId;
+        const order = await prisma.order.findUnique({
+          where: { id: numericOrderId },
+        });
+        if (order) {
+          orderId = numericOrderId;
+          currency = order.currency;
+        }
+      }
+    } catch {
+      // Fall back to legacy format
+      const legacy = legacyPaymentSchema.parse(body);
+      const numericOrderId = typeof legacy.orderId === 'string' ? parseInt(legacy.orderId) : legacy.orderId;
+      
+      // Fetch order from database
+      const order = await prisma.order.findUnique({
+        where: { id: numericOrderId },
+      });
 
-    if (!order) {
-      return NextResponse.json(
-        { error: 'الطلب غير موجود' },
-        { status: 404 }
-      );
+      if (!order) {
+        return NextResponse.json(
+          { error: 'الطلب غير موجود' },
+          { status: 404 }
+        );
+      }
+
+      orderId = numericOrderId;
+      amount = legacy.amount || order.total;
+      currency = order.currency;
+      customerInfo = legacy.customerInfo;
     }
 
-    // Authenticate with Paymob
-    const authToken = await authenticatePaymob();
-    if (!authToken) {
-      return NextResponse.json(
-        { error: 'فشل في الاتصال بخدمة الدفع' },
-        { status: 500 }
-      );
-    }
-
-    // Create Paymob order
-    const paymobOrder = await createPaymobOrder(
-      authToken,
-      order.total,
-      order.currency
+    // Use the complete payment flow helper
+    const merchantOrderId = orderId 
+      ? `town-bakery-${orderId}-${Date.now()}`
+      : `town-bakery-${Date.now()}`;
+    
+    const paymentResult = await initiatePaymobPayment(
+      amount,
+      currency,
+      customerInfo,
+      merchantOrderId
     );
 
-    if (!paymobOrder) {
+    if (!paymentResult) {
+      console.error('❌ Paymob error: Failed to initiate payment');
       return NextResponse.json(
-        { error: 'فشل في إنشاء طلب الدفع' },
+        { error: 'فشل في إعداد الدفع. يرجى المحاولة مرة أخرى.' },
         { status: 500 }
       );
     }
 
-    // Create payment key
-    const paymentKey = await createPaymentKey(
-      authToken,
-      paymobOrder.id,
-      customerInfo
-    );
-
-    if (!paymentKey) {
-      return NextResponse.json(
-        { error: 'فشل في إنشاء مفتاح الدفع' },
-        { status: 500 }
-      );
+    // Update order if orderId was provided
+    if (orderId) {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: {
+          paymobOrderId: paymentResult.paymobOrderId.toString(),
+          paymentStatus: 'processing',
+          status: 'processing',
+        },
+      });
     }
-
-    // Update order with Paymob order ID
-    await prisma.order.update({
-      where: { id: orderId },
-      data: { paymobOrderId: paymobOrder.id.toString() },
-    });
 
     return NextResponse.json({
       success: true,
-      paymentToken: paymentKey.token,
-      orderId: paymobOrder.id,
-      iframeUrl: paymentKey.iframe_url,
+      redirectUrl: paymentResult.paymentUrl,
     });
   } catch (error: any) {
-    console.error('خطأ في عملية الدفع:', error);
+    console.error('❌ Paymob error:', error.message);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Full error:', error);
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'بيانات غير صحيحة', details: error.issues },
@@ -89,7 +133,7 @@ export async function POST(request: Request) {
       );
     }
     return NextResponse.json(
-      { error: 'فشل في عملية الدفع' },
+      { error: error.message || 'فشل في عملية الدفع' },
       { status: 500 }
     );
   }

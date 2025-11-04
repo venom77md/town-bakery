@@ -3,6 +3,7 @@
   "description": "Town Bakery - مخبز تاون",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,12 +14,18 @@
     "setup": "npm run download-assets && npm run extract-color",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev",
-    "prisma:seed": "dotenv -e .env.local -- tsx scripts/seed-products.ts",
+    "prisma:seed": "dotenv -e .env.local -- tsx prisma/seed.ts",
     "prisma:studio": "dotenv -e .env.local -- prisma studio",
     "db:setup": "npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed",
+    "db:seed": "npm run prisma:seed",
+    "db:setup-sql": "node scripts/setup-local-db.js",
+    "db:auto-fix": "node db-auto-fix.js",
+    "test:paymob": "tsx scripts/test-paymob.ts",
     "postbuild": "next-sitemap",
     "deploy": "vercel --prod",
-    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html"
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
+    "analyze": "cross-env ANALYZE=true next build",
+    "test:supabase": "node -r dotenv/config scripts/test-supabase-connection-simple.js dotenv_config_path=.env.local"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -42,6 +49,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.0.1",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",

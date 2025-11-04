@@ -9,7 +9,9 @@ export async function GET() {
     });
     return NextResponse.json(contacts);
   } catch (error: any) {
-    console.error('خطأ في جلب الرسائل:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في جلب الرسائل:', error);
+    }
     // Fallback to local data if DB not configured
     try {
       const fs = await import('fs/promises');

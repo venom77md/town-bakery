@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -18,9 +18,9 @@ export default function AdminLoginPage() {
     const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 
     if (password === adminPassword) {
-      // Set session in localStorage
-      sessionStorage.setItem('admin_authenticated', 'true');
-      sessionStorage.setItem('admin_auth_time', Date.now().toString());
+      // Use improved auth function
+      const { setAdminAuthenticated } = await import('@/lib/admin-auth');
+      setAdminAuthenticated();
       router.push('/admin/dashboard');
     } else {
       setError('كلمة المرور غير صحيحة');
@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center px-4">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-light-yellow rounded-lg shadow-lg p-8 max-w-md w-full"
@@ -51,13 +51,13 @@ export default function AdminLoginPage() {
             />
           </div>
           {error && (
-            <motion.p
+            <m.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-red-600 text-center"
             >
               {error}
-            </motion.p>
+            </m.p>
           )}
           <button
             type="submit"
@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
         <p className="text-sm text-light-brown text-center mt-6">
           كلمة المرور الافتراضية: admin123
         </p>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -53,7 +53,7 @@ export default function ProductsPage() {
       const data = await response.json();
       setProducts(data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      // Error handled silently in production
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,6 @@ export default function ProductsPage() {
 
   const onSubmit = async (data: ProductFormData) => {
     // TODO: Implement product creation/update API
-    console.log('Product data:', data);
     setShowForm(false);
     reset();
     fetchProducts();
@@ -88,7 +87,7 @@ export default function ProductsPage() {
       </div>
 
       {showForm && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-light-yellow rounded-lg p-6 mb-8 shadow-md"
@@ -186,12 +185,12 @@ export default function ProductsPage() {
               </button>
             </div>
           </form>
-        </motion.div>
+        </m.div>
       )}
 
       <div className="grid md:grid-cols-3 gap-6">
         {products.map((product, index) => (
-          <motion.div
+          <m.div
             key={product.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -235,7 +234,7 @@ export default function ProductsPage() {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </div>

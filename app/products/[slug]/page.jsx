@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getProductBySlug } from '@/lib/products';
 import { addToCart } from '@/lib/cart';
-import ProductGallery from '../../(components)/ProductGallery';
-import Toast from '../../(components)/Toast';
+import ProductGallery from '@/app/(components)/ProductGallery';
+import Toast from '@/app/(components)/Toast';
 import Script from 'next/script';
 
 export default function ProductDetailPage() {
@@ -110,15 +110,19 @@ export default function ProductDetailPage() {
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="bg-warm-brown text-white w-10 h-10 rounded-lg hover:bg-primary transition-colors"
+                    aria-label="تقليل الكمية"
                   >
-                    -
+                    <span aria-hidden="true">-</span>
                   </button>
-                  <span className="text-2xl font-bold text-brown w-12 text-center">{quantity}</span>
+                  <span className="text-2xl font-bold text-brown w-12 text-center" aria-label={`الكمية المحددة: ${quantity}`}>
+                    {quantity}
+                  </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="bg-warm-brown text-white w-10 h-10 rounded-lg hover:bg-primary transition-colors"
+                    aria-label="زيادة الكمية"
                   >
-                    +
+                    <span aria-hidden="true">+</span>
                   </button>
                 </div>
               </div>
@@ -128,6 +132,8 @@ export default function ProductDetailPage() {
                 onClick={handleAddToCart}
                 disabled={isAdding}
                 className="w-full bg-primary text-white px-8 py-4 rounded-lg text-xl font-bold hover:bg-opacity-90 transition-colors disabled:opacity-50"
+                aria-label={`إضافة ${product.name_ar} إلى سلة التسوق`}
+                aria-busy={isAdding}
               >
                 {isAdding ? 'جاري الإضافة...' : 'أضف إلى السلة'}
               </button>

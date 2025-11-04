@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 
 interface ContactMessage {
   id: string;
@@ -26,7 +26,10 @@ export default function MessagesPage() {
       const data = await response.json();
       setMessages(data);
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      // Log only in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching messages:', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -42,7 +45,7 @@ export default function MessagesPage() {
         <h2 className="text-3xl font-bold text-brown mb-8">الرسائل</h2>
         <div className="space-y-4">
           {messages.map((message, index) => (
-            <motion.div
+            <m.div
               key={message.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -66,7 +69,7 @@ export default function MessagesPage() {
                   {new Date(message.createdAt).toLocaleDateString('ar-EG')}
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
         {messages.length === 0 && (
@@ -77,7 +80,7 @@ export default function MessagesPage() {
       </div>
 
       {selectedMessage && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           className="bg-light-yellow rounded-lg p-6 shadow-md sticky top-8"
@@ -111,7 +114,7 @@ export default function MessagesPage() {
               إغلاق
             </button>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </div>
   );

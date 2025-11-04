@@ -5,7 +5,8 @@ Disallow: /admin
 Disallow: /api
 
 # Host
-Host: https://town-bakery.vercel.app
+Host: http://localhost:3000
 
 # Sitemaps
+Sitemap: http://localhost:3000/sitemap.xml
 Sitemap: https://town-bakery.vercel.app/sitemap.xml

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { LazyMotion, domAnimation, m, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 
 export default function Toast({ message, type = 'success', isVisible, onClose }) {
@@ -14,9 +14,10 @@ export default function Toast({ message, type = 'success', isVisible, onClose })
   }, [isVisible, onClose]);
 
   return (
+    <LazyMotion features={domAnimation}>
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -50, x: '-50%' }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
@@ -43,9 +44,10 @@ export default function Toast({ message, type = 'success', isVisible, onClose })
               ✕
             </button>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
+    </LazyMotion>
   );
 }
 

@@ -22,7 +22,9 @@ export async function GET() {
     });
     return NextResponse.json(orders);
   } catch (error: any) {
-    console.error('خطأ في قراءة الطلبات:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في قراءة الطلبات:', error);
+    }
     return NextResponse.json(
       { error: 'فشل في جلب الطلبات' },
       { status: 500 }
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
 
     const order = await prisma.order.create({
       data: {
-        products: validatedData.products,
+        products: JSON.stringify(validatedData.products), // Store as JSON string
         total: validatedData.total,
         currency: validatedData.currency,
         customerName: validatedData.customerName,
@@ -60,7 +62,9 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('خطأ في إنشاء الطلب:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في إنشاء الطلب:', error);
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, error: 'بيانات غير صحيحة', details: error.issues },
@@ -97,7 +101,9 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ success: true, order });
   } catch (error: any) {
-    console.error('خطأ في تحديث الطلب:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في تحديث الطلب:', error);
+    }
     return NextResponse.json(
       { success: false, error: 'فشل في تحديث الطلب' },
       { status: 500 }

@@ -25,7 +25,16 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env
+.env.local
+
+# database files
+*.db
+*.db-journal
+prisma/.db
+prisma/.db-journal
+/dev.db
+/dev.db-journal
 
 # vercel
 .vercel

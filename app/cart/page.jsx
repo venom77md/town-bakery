@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getCart, updateCartItemQuantity, removeFromCart, getCartTotal, clearCart } from '@/lib/cart';
-import Toast from '../(components)/Toast';
+import Toast from '@/app/(components)/Toast';
 
 export default function CartPage() {
   const router = useRouter();
@@ -73,7 +73,9 @@ export default function CartPage() {
         router.push(`/order?orderId=${orderId}`);
       }
     } catch (error) {
-      console.error('Error submitting order:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error submitting order:', error);
+      }
     }
   };
 
@@ -120,15 +122,19 @@ export default function CartPage() {
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
                       className="bg-warm-brown text-white w-8 h-8 rounded-lg hover:bg-primary"
+                      aria-label={`تقليل كمية ${item.name_ar}`}
                     >
-                      -
+                      <span aria-hidden="true">-</span>
                     </button>
-                    <span className="text-xl font-bold text-brown w-10 text-center">{item.quantity}</span>
+                    <span className="text-xl font-bold text-brown w-10 text-center" aria-label={`الكمية: ${item.quantity}`}>
+                      {item.quantity}
+                    </span>
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       className="bg-warm-brown text-white w-8 h-8 rounded-lg hover:bg-primary"
+                      aria-label={`زيادة كمية ${item.name_ar}`}
                     >
-                      +
+                      <span aria-hidden="true">+</span>
                     </button>
                   </div>
                   <div className="text-xl font-bold text-primary">
@@ -137,8 +143,9 @@ export default function CartPage() {
                   <button
                     onClick={() => removeItem(item.id)}
                     className="text-red-600 hover:text-red-800"
+                    aria-label={`حذف ${item.name_ar} من السلة`}
                   >
-                    ✕
+                    <span aria-hidden="true">✕</span>
                   </button>
                 </div>
               ))}

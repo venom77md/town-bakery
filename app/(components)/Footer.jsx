@@ -14,7 +14,7 @@ export default function Footer() {
               <div className="relative w-12 h-12">
                 <Image
                   src="/assets/logo.png"
-                  alt="Town Bakery"
+                  alt="Town Bakery - مخبز تاون - شعار المخبز"
                   fill
                   className="object-contain"
                 />

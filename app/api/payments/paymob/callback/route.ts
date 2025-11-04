@@ -10,7 +10,9 @@ export async function POST(request: Request) {
 
     // Verify HMAC
     if (!verifyPaymobHMAC(obj, hmac)) {
-      console.error('⚠️ Paymob callback HMAC verification failed');
+      if (process.env.NODE_ENV === 'development') {
+        console.error('⚠️ Paymob callback HMAC verification failed');
+      }
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -22,22 +24,40 @@ export async function POST(request: Request) {
     });
 
     if (!order) {
-      console.error(`Order not found for Paymob order ID: ${order_id}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Order not found for Paymob order ID: ${order_id}`);
+      }
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Update order payment status
+    // Determine payment status
+    let paymentStatus = 'pending';
+    let orderStatus = order.status;
+
+    if (success) {
+      paymentStatus = 'paid';
+      orderStatus = 'confirmed';
+    } else {
+      paymentStatus = 'failed';
+      orderStatus = 'failed';
+    }
+
+    // Update order payment status with transaction ID
     await prisma.order.update({
       where: { id: order.id },
       data: {
-        paymentStatus: success ? 'paid' : 'failed',
+        paymentStatus,
+        status: orderStatus,
+        transactionId: transaction_id?.toString(),
         updatedAt: new Date(),
       },
     });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('خطأ في معالجة callback الدفع:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('خطأ في معالجة callback الدفع:', error);
+    }
     return NextResponse.json(
       { error: 'فشل في معالجة callback' },
       { status: 500 }

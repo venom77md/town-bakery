@@ -1,8 +1,22 @@
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'من نحن - Town Bakery',
-  description: 'تعرف على قصة Town Bakery ورئيس الطهاة',
+  title: 'من نحن - Town Bakery | مخبز تاون',
+  description: 'تعرف على قصة Town Bakery ورئيس الطهاة. مخبز عائلي يقدم مخبوزات طازجة يومياً منذ 2015',
+  keywords: 'Town Bakery, مخبز تاون, قصتنا, رئيس الطهاة, bakery story',
+  openGraph: {
+    title: 'من نحن - Town Bakery | مخبز تاون',
+    description: 'تعرف على قصة Town Bakery ورئيس الطهاة',
+    type: 'website',
+    images: [
+      {
+        url: 'https://town-bakery.vercel.app/assets/chef.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Town Bakery - رئيس الطهاة',
+      },
+    ],
+  },
 };
 
 export default function AboutPage() {
@@ -16,9 +30,10 @@ export default function AboutPage() {
             <div className="relative h-96 rounded-lg overflow-hidden shadow-lg">
               <Image
                 src="/assets/hero-1.jpg"
-                alt="مخبز Town Bakery"
+                alt="مخبز Town Bakery - مخبز تاون - داخلي دافئ وحديث"
                 fill
                 className="object-cover"
+                loading="lazy"
               />
             </div>
             <div>
@@ -49,9 +64,10 @@ export default function AboutPage() {
             <div className="relative h-96 rounded-lg overflow-hidden shadow-lg">
               <Image
                 src="/assets/chef.jpg"
-                alt="رئيس الطهاة"
+                alt="رئيس الطهاة - الشيف ماريا رودريجيز في مخبز Town Bakery"
                 fill
                 className="object-cover"
+                loading="lazy"
               />
             </div>
             <div>

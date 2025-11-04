@@ -1,9 +1,15 @@
-import ContactForm from '../(components)/ContactForm';
+import ContactForm from '@/app/(components)/ContactForm';
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'اتصل بنا - Town Bakery',
-  description: 'تواصل مع Town Bakery للحصول على معلومات أو طلبات مخصصة',
+  title: 'اتصل بنا - Town Bakery | مخبز تاون',
+  description: 'تواصل مع Town Bakery للحصول على معلومات أو طلبات مخصصة. نحن هنا لمساعدتك!',
+  keywords: 'اتصل بنا, Town Bakery, تواصل, طلبات مخصصة, customer service',
+  openGraph: {
+    title: 'اتصل بنا - Town Bakery',
+    description: 'تواصل مع Town Bakery للحصول على معلومات أو طلبات مخصصة',
+    type: 'website',
+  },
 };
 
 export default function ContactPage() {

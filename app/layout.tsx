@@ -4,6 +4,34 @@ import './globals.css'
 import Script from 'next/script'
 import LayoutWrapper from './LayoutWrapper'
 
+// Organization Schema for SEO
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BakeryStore',
+  '@id': 'https://town-bakery.vercel.app/#organization',
+  name: 'Town Bakery - مخبز تاون',
+  alternateName: 'Town Bakery',
+  description: 'مخبز تاون - خبز طازج يومياً ومخبوزات عالية الجودة مصنوعة من أفضل المكونات الطبيعية',
+  url: 'https://town-bakery.vercel.app',
+  logo: 'https://town-bakery.vercel.app/assets/logo.png',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '123 شارع المخبز',
+    addressLocality: 'المدينة الحلوة',
+    addressCountry: 'EG',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+201234567890',
+    contactType: 'Customer Service',
+    areaServed: 'EG',
+    availableLanguage: ['Arabic', 'English'],
+  },
+  sameAs: [
+    // Add social media links when available
+  ],
+}
+
 const cairo = Cairo({ 
   subsets: ['arabic', 'latin'],
   weight: ['400', '600', '700'],
@@ -17,15 +45,24 @@ export const metadata: Metadata = {
   authors: [{ name: 'Town Bakery' }],
   openGraph: {
     title: 'Town Bakery - مخبز تاون',
-    description: 'خبز طازج يومياً ومخبوزات عالية الجودة',
+    description: 'خبز طازج يومياً ومخبوزات عالية الجودة. اطلب الآن واحصل على توصيل سريع!',
     type: 'website',
     locale: 'ar_EG',
     siteName: 'Town Bakery',
+    images: [
+      {
+        url: 'https://town-bakery.vercel.app/assets/hero-1.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Town Bakery - مخبز تاون',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Town Bakery - مخبز تاون',
-    description: 'خبز طازج يومياً ومخبوزات عالية الجودة',
+    description: 'خبز طازج يومياً ومخبوزات عالية الجودة. اطلب الآن واحصل على توصيل سريع!',
+    images: ['https://town-bakery.vercel.app/assets/hero-1.jpg'],
   },
   robots: {
     index: true,
@@ -44,6 +81,12 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <head>
+        <link rel="skip-to-content" href="#main-content" />
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         {gaId && (
           <>
             <Script

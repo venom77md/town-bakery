@@ -23,19 +23,29 @@ npm install
 
 ### 2. إعداد Supabase
 
-اتبع الإرشادات في [`SETUP_INSTRUCTIONS.md`](./SETUP_INSTRUCTIONS.md) لإنشاء مشروع Supabase والحصول على بيانات الاتصال.
+1. اذهب إلى https://app.supabase.com
+2. أنشئ مشروع جديد أو استخدم مشروع موجود
+3. اذهب إلى **Settings** → **Database**
+4. انسخ connection string من قسم **Connection Pooling** (استخدم Transaction mode)
 
 ### 3. إعداد Paymob
 
-اتبع الإرشادات في [`SETUP_INSTRUCTIONS.md`](./SETUP_INSTRUCTIONS.md) لإعداد حساب Paymob (Sandbox).
+1. اذهب إلى https://accept.paymob.com
+2. سجّل حساب جديد أو سجّل الدخول
+3. احصل على API Key و Integration ID من **Settings**
 
 ### 4. إعداد ملف البيئة
 
 ```bash
-cp .env.example .env.local
+# أنشئ ملف .env.local وأضف:
+DATABASE_URL=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true
+SUPABASE_URL=https://[PROJECT-ID].supabase.co
+SUPABASE_ANON_KEY=your_anon_key
+PAYMOB_API_KEY=your_api_key
+PAYMOB_INTEGRATION_ID=your_integration_id
+NEXT_PUBLIC_ADMIN_PASSWORD=admin123
+NEXT_PUBLIC_CONTACT_PHONE=+201234567890
 ```
-
-املأ جميع القيم في `.env.local` (راجع `SETUP_INSTRUCTIONS.md`).
 
 ### 5. إعداد قاعدة البيانات
 

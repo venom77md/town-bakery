@@ -1,59 +1,79 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  name_ar   String?   // Arabic name
+  name_en   String?   // English name
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  name_ar     String
-  name_en     String?
-  description_ar String
-  description_en String?
-  price       Float
-  currency    String   @default("EGP")
-  category    String
-  image       String
-  ingredients String?  // JSON array as string
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Order {
-  id           String   @id @default(uuid())
-  products     Json     // Array of cart items
-  total        Float
-  currency     String   @default("EGP")
-  customerName String
-  phone        String
-  address      String?
-  deliveryTime String?
-  paymentStatus String  @default("pending") // pending, paid, failed, cancelled
-  paymentMethod String
-  paymobOrderId String? // Paymob order/transaction ID
-  status       String   @default("new") // new, preparing, delivered, canceled
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
-model Contact {
-  id        String   @id @default(uuid())
-  name      String
-  email     String?
-  message   String
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  name          String
+  name_ar       String?  // Arabic name
+  name_en       String?  // English name
+  description   String
+  description_ar String? // Arabic description
+  description_en String? // English description
+  price         Float
+  price_cents   Int?     // Price in cents for payment processing
+  currency      String   @default("EGP")
+  image         String
+  image_path    String?  // Alternative image path
+  slug          String?  @unique // URL-friendly slug
+  category      String?  // Legacy category field (deprecated, use categoryId)
+  categoryId    Int?     // Foreign key to Category
+  category_rel  Category? @relation(fields: [categoryId], references: [id])
+  stock         Int      @default(0)
+  ingredients   String?  // JSON array of ingredients
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
+  name      String
   email     String   @unique
-  password  String   // hashed
-  role      String   @default("admin")
+  role      String   @default("customer")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  products      String   // JSON array of products
+  total         Float
+  currency      String   @default("EGP")
+  customerName  String
+  phone         String
+  address       String?
+  deliveryTime  String?
+  paymentMethod String
+  paymentStatus String   @default("pending")
+  status        String   @default("pending")
+  transactionId String? // Paymob transaction ID
+  paymobOrderId String? // Paymob order ID
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
